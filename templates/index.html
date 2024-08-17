@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koyu Tema Soru-Cevap Sistemi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1e1e1e; /* Koyu arka plan rengi */
+            color: #e0e0e0; /* Açık metin rengi */
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 15px 0;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .chat-container {
+            background: #2e2e2e; /* Koyu gri arka plan */
+            padding: 20px;
+            border-radius: 8px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 80%;
+            word-break: break-word;
+        }
+        .user-message {
+            background: #3a3a3a; /* Koyu gri arka plan */
+            color: #1e90ff; /* Mavi metin rengi */
+            align-self: flex-end;
+        }
+        .ai-message {
+            background: #4a4a4a; /* Daha açık koyu gri arka plan */
+            color: #00ff00; /* Yeşil metin rengi */
+            align-self: flex-start;
+        }
+        .timestamp {
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 5px;
+        }
+        .form-container {
+            margin-top: 20px;
+            background: #2e2e2e; /* Koyu gri arka plan */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #444; /* Koyu gri kenar rengi */
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+            resize: none;
+            background-color: #333; /* Koyu gri arka plan */
+            color: #e0e0e0; /* Açık metin rengi */
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background: #333;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+        }
+        button:hover {
+            background: #555;
+        }
+        .loading {
+            display: none;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Koyu Tema Soru-Cevap Sistemi</h1>
+    </header>
+
+    <div class="container">
+        <div class="chat-container" id="chat-container">
+            <!-- Sohbet baloncukları burada görünecek -->
+        </div>
+        <div class="form-container">
+            <textarea id="question" placeholder="Sorunuzu buraya yazın..."></textarea>
+            <button onclick="askQuestion()">Gönder</button>
+        </div>
+        <div class="loading" id="loading">Yanıt bekleniyor...</div>
+    </div>
+
+    <script>
+        async function askQuestion() {
+            const question = document.getElementById('question').value;
+            const chatContainer = document.getElementById('chat-container');
+            const loadingElement = document.getElementById('loading');
+
+            if (question.trim() === '') {
+                return;  // Boş soru durumunda işlem yapma
+            }
+
+            // Kullanıcı sorusunu ekle
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.classList.add('chat-message', 'user-message');
+            userMessageDiv.innerHTML = `<p>${question}</p><span class="timestamp">${new Date().toLocaleString()}</span>`;
+            chatContainer.appendChild(userMessageDiv);
+
+            loadingElement.style.display = 'block';  // Yükleniyor mesajını göster
+
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const aiMessage = data.answer || 'Cevap alınamadı.';
+
+                    // Yapay zeka yanıtını ekle
+                    const aiMessageDiv = document.createElement('div');
+                    aiMessageDiv.classList.add('chat-message', 'ai-message');
+                    aiMessageDiv.innerHTML = `<p>${aiMessage}</p><span class="timestamp">${new Date().toLocaleString()}</span>`;
+                    chatContainer.appendChild(aiMessageDiv);
+
+                    // Sohbet penceresini aşağı kaydır
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                } else {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.classList.add('chat-message', 'ai-message');
+                    errorDiv.innerHTML = `<p>Bir hata oluştu.</p><span class="timestamp">${new Date().toLocaleString()}</span>`;
+                    chatContainer.appendChild(errorDiv);
+                }
+            } catch (error) {
+                const errorDiv = document.createElement('div');
+                errorDiv.classList.add('chat-message', 'ai-message');
+                errorDiv.innerHTML = `<p>Bir hata oluştu.</p><span class="timestamp">${new Date().toLocaleString()}</span>`;
+                chatContainer.appendChild(errorDiv);
+            } finally {
+                loadingElement.style.display = 'none';  // Yükleniyor mesajını gizle
+            }
+
+            // Soru alanını temizle
+            document.getElementById('question').value = '';
+        }
+
+        // ENTER tuşuna basıldığında soruyu gönder
+        document.getElementById('question').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                askQuestion();
+            }
+        });
+    </script>
+</body>
+</html>
