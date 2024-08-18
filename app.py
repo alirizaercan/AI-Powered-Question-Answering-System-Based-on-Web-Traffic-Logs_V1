@@ -1,10 +1,10 @@
 from flask import Flask, request, jsonify, render_template
-from sentence_transformers import SentenceTransformer
 import pandas as pd
 import os
 from utils.preprocessing_utils import clean_data
 from utils.vector_store import load_data, vectorize_data, create_faiss_index, save_index
 from models.rag_model import RAGModel
+from sentence_transformers import SentenceTransformer
 
 app = Flask(__name__)
 
@@ -65,8 +65,9 @@ def ask_question():
             response = rag_model.answer_question(question)
             return jsonify({'answer': response})
         except Exception as e:
-            return jsonify({'error': f'Bir hata oluştu: {e}'}), 500
-    return jsonify({'error': 'Soru sağlanmadı'}), 400
+            return jsonify({'error': f'Bir hata oluştu: {str(e)}'})
+    else:
+        return jsonify({'error': 'Soru boş olamaz!'})
 
 if __name__ == '__main__':
     app.run(debug=True)

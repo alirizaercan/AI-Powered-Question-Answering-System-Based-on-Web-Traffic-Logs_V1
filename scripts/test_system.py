@@ -1,3 +1,5 @@
+#scripts/test_system.py
+
 import os
 import sys
 
@@ -8,8 +10,8 @@ from models.rag_model import RAGModel
 
 def test_rag_model():
     # Model dosyalarının yollarını buraya yerleştirin
-    retrieval_index_path = "C:/Users/Ali Riza Ercan/Desktop/web-traffic-qa-system/data/faiss_index.idx"
-    log_file_path = "C:/Users/Ali Riza Ercan/Desktop/web-traffic-qa-system/data/logfiles.csv"
+    retrieval_index_path = "../data/faiss_index.idx"
+    log_file_path = "../data/logfiles.csv"
     rag_model = RAGModel(retrieval_index_path, generation_model_name='gpt2', log_file_path=log_file_path)
 
     # Test soruları

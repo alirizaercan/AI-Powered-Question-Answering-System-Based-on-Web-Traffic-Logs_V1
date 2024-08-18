@@ -1,4 +1,5 @@
-# models/generation.py
+#models/generation.py
+
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import torch
 
@@ -18,9 +19,9 @@ class GenerationModel:
         outputs = self.model.generate(
             inputs,
             attention_mask=attention_mask,
-            max_length=500,
+            max_length=500,  # Max length'ı azaltarak yanıtları kısaltabilirsiniz
             num_return_sequences=1,
-            pad_token_id=self.tokenizer.eos_token_id  # pad_token_id olarak eos_token_id kullanımı
+            pad_token_id=self.tokenizer.eos_token_id
         )
         response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
         return response

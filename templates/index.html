@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Koyu Tema Soru-Cevap Sistemi</title>
+    <title>Web Trafik Loglarına Dayalı Yapay Zeka Destekli Soru-Cevap Sistemi</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -48,21 +48,24 @@
             border-radius: 8px;
             max-width: 80%;
             word-break: break-word;
+            font-family: monospace; /* Terminal stili için */
+            white-space: pre-wrap; /* Satır sonlarını korur */
         }
         .user-message {
             background: #3a3a3a; /* Koyu gri arka plan */
-            color: #1e90ff; /* Mavi metin rengi */
+            color: #fff; /* Beyaz metin rengi */
             align-self: flex-end;
         }
         .ai-message {
             background: #4a4a4a; /* Daha açık koyu gri arka plan */
-            color: #00ff00; /* Yeşil metin rengi */
+            color: #fff; /* Beyaz metin rengi */
             align-self: flex-start;
         }
         .timestamp {
             font-size: 0.8em;
-            color: #888;
+            color: #bbb; /* Daha hafif bir gri */
             margin-top: 5px;
+            display: inline-block;
         }
         .form-container {
             margin-top: 20px;
@@ -108,7 +111,7 @@
 </head>
 <body>
     <header>
-        <h1>Koyu Tema Soru-Cevap Sistemi</h1>
+        <h1>Web Trafik Loglarına Dayalı Yapay Zeka Destekli Soru-Cevap Sistemi</h1>
     </header>
 
     <div class="container">
@@ -135,7 +138,7 @@
             // Kullanıcı sorusunu ekle
             const userMessageDiv = document.createElement('div');
             userMessageDiv.classList.add('chat-message', 'user-message');
-            userMessageDiv.innerHTML = `<p>${question}</p><span class="timestamp">${new Date().toLocaleString()}</span>`;
+            userMessageDiv.innerHTML = `Soru: ${question}<br><span class="timestamp">${new Date().toLocaleString()}</span>`;
             chatContainer.appendChild(userMessageDiv);
 
             loadingElement.style.display = 'block';  // Yükleniyor mesajını göster
@@ -156,7 +159,7 @@
                     // Yapay zeka yanıtını ekle
                     const aiMessageDiv = document.createElement('div');
                     aiMessageDiv.classList.add('chat-message', 'ai-message');
-                    aiMessageDiv.innerHTML = `<p>${aiMessage}</p><span class="timestamp">${new Date().toLocaleString()}</span>`;
+                    aiMessageDiv.innerHTML = `Cevap: ${aiMessage}<br><span class="timestamp">${new Date().toLocaleString()}</span>`;
                     chatContainer.appendChild(aiMessageDiv);
 
                     // Sohbet penceresini aşağı kaydır
@@ -164,13 +167,13 @@
                 } else {
                     const errorDiv = document.createElement('div');
                     errorDiv.classList.add('chat-message', 'ai-message');
-                    errorDiv.innerHTML = `<p>Bir hata oluştu.</p><span class="timestamp">${new Date().toLocaleString()}</span>`;
+                    errorDiv.innerHTML = `Bir hata oluştu.<br><span class="timestamp">${new Date().toLocaleString()}</span>`;
                     chatContainer.appendChild(errorDiv);
                 }
             } catch (error) {
                 const errorDiv = document.createElement('div');
                 errorDiv.classList.add('chat-message', 'ai-message');
-                errorDiv.innerHTML = `<p>Bir hata oluştu.</p><span class="timestamp">${new Date().toLocaleString()}</span>`;
+                errorDiv.innerHTML = `Bir hata oluştu.<br><span class="timestamp">${new Date().toLocaleString()}</span>`;
                 chatContainer.appendChild(errorDiv);
             } finally {
                 loadingElement.style.display = 'none';  // Yükleniyor mesajını gizle

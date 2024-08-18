@@ -1,4 +1,5 @@
-# models/retrieval.py
+#models/retrieval.py
+
 import faiss
 import numpy as np
 
@@ -11,8 +12,6 @@ class RetrievalModel:
         """
         self.index_path = index_path
         self.index = faiss.read_index(self.index_path)
-        
-        # Vektör boyutunu kontrol et
         self.dimension = self.index.d
 
     def search(self, query_vector, top_k=5):

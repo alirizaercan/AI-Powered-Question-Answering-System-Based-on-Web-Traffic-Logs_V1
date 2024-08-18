@@ -1,4 +1,9 @@
 pandas
 numpy
+torch
 transformers
+sentence-transformers
+Flask
+faiss-cpu
+selenium
 torch
