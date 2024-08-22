@@ -150,4 +150,4 @@ Ali Riza Ercan - Project development and integration.
 License
 This project is licensed under the MIT License. For more details, see the LICENSE file.
 
-The aim was to develop question & answering system with web traffic logs!
+The aim was to develop question & answering system with web traffic logs.
